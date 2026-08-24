@@ -94,10 +94,19 @@ reachable.
 
 ## Energy
 
-`KJ_PER_KCAL` is 4.184, the thermochemical definition. Use `kcal_from_kj` and
-`kj_from_kcal` so the direction is unambiguous at the call site; do not
-multiply by a rounded reciprocal such as `0.239006`, which disagrees with
-`1 / 4.184` in the 7th significant figure.
+`KJ_PER_KCAL` is `Decimal("4.184")`, the thermochemical definition. It is a
+Decimal because that is a definition rather than a measurement, and the
+nearest float to 4.184 is really 4.18400000000000016.
+
+Use `kcal_from_kj` and `kj_from_kcal` so the direction is unambiguous at the
+call site; do not multiply by a rounded reciprocal such as `0.239006`, which
+disagrees with `1 / 4.184` in the 7th significant figure.
+
+Both return a Decimal and accept a Decimal, int, str or float. A float is
+converted through `str`, so it reads back as the figure a label stated rather
+than the binary approximation stored for it. Callers still holding floats
+should wrap the result in `float()`, which marks where the lossy domain
+begins.
 
 ## nutrients.json
 

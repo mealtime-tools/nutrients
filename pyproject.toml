@@ -3,7 +3,7 @@
 # `mealtime_nutrients` rather than `nutrients`, because five siblings depend on
 # it and a top-level `nutrients` would collide with any of their own modules.
 name = "mealtime-nutrients"
-version = "0.1.0"
+version = "0.2.0"
 description = "The nutrient vocabulary and energy constant shared by the mealtime tools."
 readme = "README.md"
 license = "MIT"

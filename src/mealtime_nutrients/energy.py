@@ -4,15 +4,31 @@ Labels outside the US print kilojoules; every tool stores kilocalories. This
 module is the only place that ratio is written down.
 """
 
-# Exactly 4.184 J. Divide by it; the old 0.239006 reciprocal was wrong.
-KJ_PER_KCAL = 4.184
+from decimal import Decimal
+
+# Exactly 4.184 J, the thermochemical calorie. Decimal because that is a
+# definition rather than a measurement, and `float("4.184")` is really
+# 4.18400000000000016. The old 0.239006 reciprocal was wrong besides.
+KJ_PER_KCAL = Decimal("4.184")
+
+Energy = Decimal | int | str | float
 
 
-def kcal_from_kj(kilojoules: float) -> float:
+def _exact(value: Energy) -> Decimal:
+    """One figure as the decimal it was written as.
+
+    A float goes through `str` so it reads back as the figure a label stated
+    rather than the binary approximation stored for it: 0.1 is Decimal("0.1"),
+    not Decimal("0.1000000000000000055511151231257827").
+    """
+    return Decimal(str(value)) if isinstance(value, float) else Decimal(value)
+
+
+def kcal_from_kj(kilojoules: Energy) -> Decimal:
     """Kilocalories for a figure published in kilojoules."""
-    return kilojoules / KJ_PER_KCAL
+    return _exact(kilojoules) / KJ_PER_KCAL
 
 
-def kj_from_kcal(kilocalories: float) -> float:
+def kj_from_kcal(kilocalories: Energy) -> Decimal:
     """Kilojoules for a figure published in kilocalories."""
-    return kilocalories * KJ_PER_KCAL
+    return _exact(kilocalories) * KJ_PER_KCAL
