@@ -1,0 +1,52 @@
+[project]
+# `nutrients` is taken on PyPI, so the distribution is prefixed. The import is
+# `mealtime_nutrients` rather than `nutrients`, because five siblings depend on
+# it and a top-level `nutrients` would collide with any of their own modules.
+name = "mealtime-nutrients"
+version = "0.1.0"
+description = "The nutrient vocabulary and energy constant shared by the mealtime tools."
+readme = "README.md"
+license = "MIT"
+# Floored one minor below the other mealtime tools: this is a base library, so
+# it must not raise the floor of nutrilog, which supports 3.12.
+requires-python = ">=3.12"
+authors = [{ name = "owahltinez", email = "oscar@wahltinez.org" }]
+keywords = ["nutrition", "nutrients", "macros", "google-health"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Utilities",
+]
+
+# Deliberately empty, and to stay that way. Every sibling depends on this, so a
+# dependency added here is a dependency added to all five.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/mealtime-tools/nutrients"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mealtime_nutrients"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/mealtime_nutrients"]
+python_files = ["*_test.py"]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint.isort]
+known-first-party = ["mealtime_nutrients"]
