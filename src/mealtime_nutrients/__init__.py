@@ -3,22 +3,22 @@
 A data package: no parsing, no validation, no dependencies.
 """
 
-from mealtime_nutrients.labels import row_pattern
 from mealtime_nutrients.energy import (
     KJ_PER_KCAL,
     kcal_from_kj,
     kj_from_kcal,
 )
+from mealtime_nutrients.labels import row_pattern
 from mealtime_nutrients.vocabulary import (
     API_FIELDS,
     API_NUTRIENTS,
     CORE_NUTRIENTS,
-    OPTIONAL_NUTRIENTS,
     ENERGY_NUTRIENT,
     ENERGY_UNIT,
     NUTRIENT_TYPES,
     NUTRIENT_UNIT,
     NUTRIENTS,
+    OPTIONAL_NUTRIENTS,
     UNREACHABLE_NUTRIENT_TYPES,
 )
 
