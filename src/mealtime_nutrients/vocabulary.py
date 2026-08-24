@@ -1,29 +1,16 @@
 """The wire nutrient vocabulary, and where each name goes in Google Health.
 
-`NUTRIENTS` holds the names that appear in the JSON the mealtime tools exchange
--- the item shape in FORMAT.md -- not Google Health's API spelling of them. The
-two disagree often enough that a bare list of API names would leave every
-consumer writing its own translation layer: the format says `kcal`, `fat`,
-`carbs` and `fiber` where the API says `energy`, `totalFat`, `CARBOHYDRATES`
-and `DIETARY_FIBER`.
+`NUTRIENTS` holds the names the tools exchange -- FORMAT.md's item shape --
+not Google Health's spelling of them. The two disagree often enough that a
+list of API names would leave every consumer writing its own translation:
+the format says `kcal`, `fat`, `carbs`, `fiber` where the API says `energy`,
+`totalFat`, `CARBOHYDRATES`, `DIETARY_FIBER`.
 
-The mapping is therefore the point of this module, and it has two halves,
-because Google Health's nutrition log has two places to put a figure:
+So the mapping is the point, and it has two halves because the log has two
+places to put a figure: `API_NUTRIENTS` for the `nutrients` array, and
+`API_FIELDS` for a dedicated object. Both were read off nutrilog.
 
-- `API_NUTRIENTS` -- names that go into the `nutrients` array, as an enum
-  member. Membership here is what "array-eligible" means.
-- `API_FIELDS` -- names that go into a dedicated object on the log instead.
-
-Both were read off nutrilog rather than invented: `MealLog.to_api_payload`
-for the split, `cli.STANDARD_NUTRIENTS` and `NutrientType.from_string` for the
-non-identity spellings.
-
-Units: every nutrient here is expressed in GRAMS, and every dedicated field
-takes its figure under a `grams` key. Google Health accepts no milligram or
-microgram variant, not even for the trace minerals and vitamins whose labels
-print mg or ug, so a record holding milligrams holds a figure a thousand times
-too large. `kcal` is the sole exception: it is kilocalories, and its dedicated
-`energy` object takes a `kcal` key.
+Every nutrient is grams. `kcal` alone is kilocalories.
 """
 
 # Google Health's NutrientType, transcribed verbatim and alphabetical.
@@ -94,13 +81,25 @@ API_FIELDS: dict[str, str] = {
     "fat": "totalFat",
 }
 
-# Exactly one name per nutrient: a second spelling could double-declare.
-NUTRIENTS: tuple[str, ...] = tuple(
-    sorted(set(API_NUTRIENTS) | set(API_FIELDS))
-)
-
 # Required by every tool; ordered as they read on a label.
 CORE_NUTRIENTS: tuple[str, ...] = ("kcal", "protein", "fat", "carbs")
+
+# History: with the core four, the first seven keys of every share link.
+_LEGACY_NUTRIENTS: tuple[str, ...] = ("fiber", "sodium", "sugar")
+
+_REST: tuple[str, ...] = tuple(
+    sorted(
+        (set(API_NUTRIENTS) | set(API_FIELDS))
+        - set(CORE_NUTRIENTS)
+        - set(_LEGACY_NUTRIENTS)
+    )
+)
+
+# Every wire name, in the order every tool renders them.
+NUTRIENTS: tuple[str, ...] = CORE_NUTRIENTS + _LEGACY_NUTRIENTS + _REST
+
+# What a record may leave unstated, per FORMAT.md.
+OPTIONAL_NUTRIENTS: tuple[str, ...] = _LEGACY_NUTRIENTS + _REST
 
 # The one wire name measured in kcal rather than grams.
 ENERGY_NUTRIENT = "kcal"

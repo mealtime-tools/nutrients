@@ -7,6 +7,7 @@ from mealtime_nutrients.vocabulary import (
     NUTRIENT_TYPES,
     NUTRIENT_UNIT,
     NUTRIENTS,
+    OPTIONAL_NUTRIENTS,
     UNREACHABLE_NUTRIENT_TYPES,
 )
 
@@ -41,9 +42,25 @@ def test_names_are_unique():
     assert len(set(NUTRIENT_TYPES)) == len(NUTRIENT_TYPES)
 
 
-def test_names_are_sorted():
-    assert list(NUTRIENTS) == sorted(NUTRIENTS)
+def test_names_are_in_canonical_wire_order():
+    """The first seven are every share link's key order and cannot move."""
+    assert NUTRIENTS[:7] == (
+        "kcal",
+        "protein",
+        "fat",
+        "carbs",
+        "fiber",
+        "sodium",
+        "sugar",
+    )
+    tail = list(NUTRIENTS[7:])
+    assert tail == sorted(tail)
     assert list(NUTRIENT_TYPES) == sorted(NUTRIENT_TYPES)
+
+
+def test_the_optional_names_are_everything_but_the_core():
+    assert OPTIONAL_NUTRIENTS == NUTRIENTS[len(CORE_NUTRIENTS) :]
+    assert not set(OPTIONAL_NUTRIENTS) & set(CORE_NUTRIENTS)
 
 
 def test_wire_names_are_lowercase():

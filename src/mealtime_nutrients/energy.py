@@ -6,9 +6,7 @@ module is the only place that ratio is written down.
 
 from decimal import Decimal
 
-# Exactly 4.184 J, the thermochemical calorie. Decimal because that is a
-# definition rather than a measurement, and `float("4.184")` is really
-# 4.18400000000000016. The old 0.239006 reciprocal was wrong besides.
+# Exactly 4.184 J: a definition, not a measurement, so not a float.
 KJ_PER_KCAL = Decimal("4.184")
 
 Energy = Decimal | int | str | float
