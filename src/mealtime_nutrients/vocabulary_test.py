@@ -98,7 +98,7 @@ def test_every_nutrient_type_is_reachable_except_the_documented_one():
 
 
 def test_the_unreachable_allowlist_is_exactly_one_member():
-    # Allowlisting means the nutrient cannot be logged at all: needs a real reason.
+    # Allowlisting means it cannot be logged at all: needs a real reason.
     assert UNREACHABLE_NUTRIENT_TYPES == frozenset({"CARBOHYDRATES"})
 
 
