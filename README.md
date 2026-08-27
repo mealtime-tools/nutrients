@@ -1,7 +1,8 @@
 # nutrients
 
 The nutrient vocabulary and energy constant shared by the mealtime tools
-(pantry, recipes, eatout, nutrilog, plate).
+(pantry, recipes, eatout, plate), and by anything else that speaks the item
+format this package documents in [FORMAT.md](https://github.com/mealtime-tools/nutrients/blob/main/FORMAT.md).
 
 A data package. No parsing, no validation, no dependencies, and no domain
 logic — those belong in the tools that consume it.
@@ -25,14 +26,15 @@ API_FIELDS["carbs"]           # "totalCarbohydrate" — a dedicated field
 ## The vocabulary
 
 `NUTRIENTS` holds the **wire names**: the 41 names that appear in the JSON
-these tools exchange, per [FORMAT.md](../FORMAT.md). It is not Google Health's
+these tools exchange, per [FORMAT.md](https://github.com/mealtime-tools/nutrients/blob/main/FORMAT.md). It is not Google Health's
 API spelling, because the two disagree — the format says `kcal`, `fat`, `carbs`
 and `fiber` where the API says `energy`, `totalFat`, `CARBOHYDRATES` and
 `DIETARY_FIBER`. A consumer that imported the API names would still need its
 own wire list plus a translation layer.
 
 `CORE_NUTRIENTS` is the four every tool treats as required (`kcal`, `protein`,
-`fat`, `carbs`); nutrilog refuses a new entry without them.
+`fat`, `carbs`); a tool that logs intake should refuse a new entry without
+them.
 
 Every nutrient is measured in **grams**. Google Health accepts no milligram or
 microgram variant, not even for the trace minerals and vitamins whose labels
@@ -67,15 +69,15 @@ And one that is, but still surprises: `protein` → `PROTEIN`, a core macro that
 nonetheless travels in the array unlike the other three. That asymmetry is
 real, and comes from `MealLog.to_api_payload`.
 
-The routing was read off nutrilog, not invented — `MealLog.to_api_payload` for
-the split, `cli.STANDARD_NUTRIENTS` and `NutrientType.from_string` for the
+The routing was read off a working Google Health client rather than invented:
+its payload builder for the split, and its nutrient-name parsing for the
 non-identity spellings.
 
 ### The one unreachable nutrient
 
 `UNREACHABLE_NUTRIENT_TYPES` is `{"CARBOHYDRATES"}`: the only enum member with
 no wire name. `carbs` already carries carbohydrate to the dedicated
-`totalCarbohydrate` field, and nutrilog matches the core four before consulting
+`totalCarbohydrate` field, and a client matches the core four before consulting
 the enum, so accepting `carbohydrates` as a second wire name would let one item
 send 25 g to `totalCarbohydrate` **and** another 25 g to the `nutrients` array
 — carbohydrate declared twice in one log. An unreachable member is the lesser

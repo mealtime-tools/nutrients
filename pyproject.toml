@@ -8,7 +8,7 @@ description = "The nutrient vocabulary and energy constant shared by the mealtim
 readme = "README.md"
 license = "MIT"
 # Floored one minor below the other mealtime tools: this is a base library, so
-# it must not raise the floor of nutrilog, which supports 3.12.
+# it must not raise the floor of the tools that consume it, which support 3.12.
 requires-python = ">=3.12"
 authors = [{ name = "owahltinez", email = "oscar@wahltinez.org" }]
 keywords = ["nutrition", "nutrients", "macros", "google-health"]

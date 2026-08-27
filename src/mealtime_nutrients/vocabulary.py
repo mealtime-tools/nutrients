@@ -8,7 +8,8 @@ the format says `kcal`, `fat`, `carbs`, `fiber` where the API says `energy`,
 
 So the mapping is the point, and it has two halves because the log has two
 places to put a figure: `API_NUTRIENTS` for the `nutrients` array, and
-`API_FIELDS` for a dedicated object. Both were read off nutrilog.
+`API_FIELDS` for a dedicated object. Both were read off a working Google
+Health client.
 
 Every nutrient is grams. `kcal` alone is kilocalories.
 """
