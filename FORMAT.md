@@ -39,6 +39,17 @@ accepts a new entry. Some health backends omit an explicit zero when reading an
 entry back, so a tool reading its own writes may render a missing core macro as
 zero; nothing in this format infers a nutrient that was never stated.
 
+## Keys this format does not define
+
+A producer may carry its own alongside these: where an item came from, what it
+costs today, the barcode the pack prints. A reader ignores any key it does not
+recognise rather than refusing the item, which is what lets a producer add one
+without a coordinated release.
+
+Two rules for a writer. Such a key is never a nutrient, so nothing here infers
+a figure from one. And it is never an identity a reader is expected to honour:
+`name` and the nutrients are the whole of what this format promises.
+
 Use `--input FILE|-` everywhere structured input is accepted. A tool that
 stores or logs a piped item stores it unchanged and never rescales it: an
 item's nutrients describe the weight it states, so changing that weight alone
